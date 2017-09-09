@@ -1,0 +1,27 @@
+{
+  "name": "sampler",
+  "version": "0.1.0",
+  "description": "Generate elaborate random data instantly",
+  "language": "babel",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "microcule .",
+    "test": "mocha --require babel-polyfill --compilers js:babel-register -w"
+  },
+  "dependencies": {
+    "babel-core": "^6.16.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-regenerator": "^6.16.1",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-3": "^6.16.0",
+    "chance": "^1.0.11",
+    "microcule": "4.x.x"
+  },
+  "devDependencies": {
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.0"
+  }
+}
