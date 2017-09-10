@@ -8,7 +8,8 @@
   "scripts": {
     "start": "microcule .",
     "test": "mocha --require babel-polyfill --compilers js:babel-register -w",
-    "test:ci": "nyc mocha --require babel-polyfill --compilers js:babel-register"
+    "test:ci": "nyc mocha --require babel-polyfill --compilers js:babel-register",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "dependencies": {
     "babel-core": "^6.16.0",
@@ -23,6 +24,10 @@
   "devDependencies": {
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-chai-friendly": "^0.4.0",
+    "eslint-plugin-import": "^2.7.0",
     "mocha": "^3.5.0",
     "nyc": "^11.2.1"
   }
