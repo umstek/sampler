@@ -18,6 +18,7 @@ describe('generator', () => {
       expect(() => traverseArray(true)).to.throw();
       expect(() => traverseArray(1.1)).to.throw();
       expect(() => traverseArray('array')).to.throw();
+      expect(() => traverseArray([])).not.to.throw();
       expect(() => traverseArray({})).to.throw();
     });
 
@@ -44,6 +45,7 @@ describe('generator', () => {
       expect(() => traverseObject(1.1)).to.throw();
       expect(() => traverseObject('array')).to.throw();
       expect(() => traverseObject([])).to.throw();
+      expect(() => traverseObject({})).not.to.throw();
     });
 
     it('should return empty object for an empty object');
