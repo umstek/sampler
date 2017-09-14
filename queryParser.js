@@ -44,7 +44,7 @@ function tokenize(input) {
         buffer = '';
       }
       tokens.push(tokenLookup[character]);
-    } else if (/^s+$/.test(character)) { // Whitespace
+    } else if (/^\s+$/.test(character)) { // Whitespace
       if (buffer !== '') {
         tokens.push(buffer);
         buffer = '';
