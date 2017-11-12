@@ -7,7 +7,9 @@ function parseColon(input) {
 function parseCommas(input) {
   const argPairs = input.split(/\s*,\s*/).map(s => s.trim());
 
-  return argPairs.map(parseColon).reduce((arr, cur) => ({ ...arr, ...cur }), {});
+  return argPairs
+    .map(parseColon)
+    .reduce((arr, cur) => ({ ...arr, ...cur }), {});
 }
 
 function parseParenthesis(input) {
@@ -21,7 +23,8 @@ function parseParenthesis(input) {
 }
 
 function validate(input) {
-  if ((/^\s*\w+\s*(\(\s*\)\s*|\(\s*\w+\s*:\s*\w+\s*(,\s*\w+\s*:\s*\w+\s*)*\)\s*)?$/).test(input)) {
+  const regex = /^\s*\w+\s*(\(\s*\)\s*|\(\s*\w+\s*:\s*\w+\s*(,\s*\w+\s*:\s*\w+\s*)*\)\s*)?$/;
+  if (regex.test(input)) {
     return true;
   }
 
@@ -43,6 +46,6 @@ export {
   parseColon as _parseColon,
   parseCommas as _parseCommas,
   parseParenthesis as _parseParenthesis,
-  validate as _validate,
+  validate as _validate
 };
 export default parseString;
