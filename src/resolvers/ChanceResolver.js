@@ -87,6 +87,7 @@ const easy = [
   'radio',
   'tv'
 ];
+
 const spreadable = {
   capitalize: ['string'],
   pad: ['number', 'width', 'padder']
@@ -129,3 +130,5 @@ export default class ChanceResolver {
     }
   }
 }
+
+ChanceResolver.SUPPORTED_TYPES = [...Object.keys(spreadable), ...easy];

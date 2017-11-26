@@ -2,7 +2,7 @@
   "extends": "airbnb-base",
   "plugins": ["chai-friendly"],
   "rules": {
-    "no-unused-expressions": 0,
+    "no-unused-expressions": "warn",
     "chai-friendly/no-unused-expressions": 2,
     "comma-dangle": "off"
   }
