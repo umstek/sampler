@@ -1,35 +1,29 @@
 {
   "name": "sampler",
-  "version": "0.1.0",
-  "description": "Generate elaborate random data instantly",
-  "language": "babel",
-  "main": "index.js",
-  "license": "MIT",
+  "version": "0.2.0",
+  "description": "",
+  "main": "dist/sampler.js",
+  "umd:main": "dist/sampler.umd.js",
+  "module": "dist/sampler.mjs",
+  "source": "src/parser.js",
   "scripts": {
-    "start": "microcule .",
-    "test": "mocha --require babel-polyfill --compilers js:babel-register -w",
-    "test:ci":
-      "nyc mocha --require babel-polyfill --compilers js:babel-register",
-    "lint": "./node_modules/.bin/eslint ."
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umstek/sampler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/umstek/sampler/issues"
+  },
+  "homepage": "https://github.com/umstek/sampler#readme",
+  "devDependencies": {
+    "microbundle": "^0.7.0"
   },
   "dependencies": {
-    "babel-core": "^6.16.0",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
-    "babel-plugin-transform-regenerator": "^6.16.1",
-    "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-stage-3": "^6.16.0",
-    "chance": "^1.0.12",
-    "microcule": "4.x.x"
-  },
-  "devDependencies": {
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "eslint": "^4.11.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-chai-friendly": "^0.4.0",
-    "eslint-plugin-import": "^2.8.0",
-    "mocha": "^3.5.3",
-    "nyc": "^11.3.0"
+    "chance": "^1.0.16"
   }
 }
