@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/umstek/sampler#readme",
   "devDependencies": {
-    "microbundle": "^0.7.0"
+    "microbundle": "^0.9.0"
   },
   "dependencies": {
-    "chance": "^1.0.16"
+    "chance": "^1.0.18"
   }
 }

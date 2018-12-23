@@ -4,7 +4,6 @@ function unescape(str) {
   return str.replace(/^\$+$/, substr => '$'.repeat(substr.length - 1));
 }
 
-// no-use-before-define fix
 let parseObject;
 let parseArray;
 
