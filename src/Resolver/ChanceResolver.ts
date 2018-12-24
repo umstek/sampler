@@ -110,7 +110,7 @@ export default class ChanceResolver implements IResolver {
   chance: Chance.Chance;
 
   resolve(type: string, args?: { [x: string]: any }) {
-    if (easy.includes(type)) {
+    if (easy.indexOf(type) !== -1) {
       // Optional arguments
       return this.chance[type](args);
     } else if (type in spreadable) {
@@ -137,6 +137,7 @@ export default class ChanceResolver implements IResolver {
         }
         return this.chance.rpg(args.dice);
       default:
+        // All supported types are implemented; this will not be hit
         return null;
     }
   }

@@ -13,10 +13,10 @@ export default class Resolver implements IResolver {
 
   resolvers: IResolver[];
 
-  resolve(type: string, args: any[]) {
+  resolve(type: string, args?: { [x: string]: any }) {
     for (let i = 0; i < this.resolvers.length; i++) {
       const resolver = this.resolvers[i];
-      if (resolver.supportedTypes.includes(type)) {
+      if (resolver.supportedTypes.indexOf(type) !== -1) {
         return resolver.resolve(type, args);
       }
     }
