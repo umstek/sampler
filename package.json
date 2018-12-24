@@ -9,7 +9,7 @@
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",

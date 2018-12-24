@@ -21,4 +21,8 @@ describe("Resolver", () => {
   test("it preserves data given to nested resolver constructors", () => {
     expect(chanceBasedResolver.resolve("seed")).toBe(100);
   });
+
+  test("it returns type itself when configured sub-resolvers don't support the type", () => {
+    expect(chanceBasedResolver.resolve("x", {})).toBe("x");
+  });
 });
