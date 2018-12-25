@@ -6,69 +6,9 @@ import IParser from "./IParser";
 import IResolverConstructor from "./Resolver/IResolverConstructor";
 import IResolver from "./Resolver/IResolver";
 
-function unescape(str: String): string {
-  return str.replace(/^\$+$/, substr => "$".repeat(substr.length - 1));
+function unescape(str: string): string {
+  return str.substr(0, 2) === "$$" ? str.substr(1) : str;
 }
-
-let parseObject;
-let parseArray;
-
-function parseSwitch(resolver: IResolver, obj: string | object) {
-  switch (typeof obj) {
-    case "string":
-      return resolver.resolve(obj);
-    case "object":
-      if (obj.constructor.name === {}.constructor.name) {
-        return parseObject(resolver, obj);
-      }
-      if (obj.constructor.name === [].constructor.name) {
-        return parseArray(resolver, obj);
-      }
-      return obj;
-    default:
-      return obj;
-  }
-}
-
-parseArray = (resolver: IResolver, array: any[]) => {
-  return array.map(elem => parseSwitch(resolver, elem));
-};
-
-parseObject = (
-  resolver: IResolver,
-  obj: { [key: string]: any; $type?: string; $process?: string[] }
-) => {
-  const { $type, $process, ...rest } = obj;
-
-  if ($type) {
-    if ($process && $process.constructor.name === [].constructor.name) {
-      const processed = {
-        ...rest,
-        ...$process
-          .map(elem => ({
-            [elem]: parseSwitch(resolver, rest[elem])
-          }))
-          .reduce((acc, cur) => ({ ...acc, ...cur }), {})
-      };
-
-      const finalObj = Object.keys(processed)
-        .map(key => ({
-          [unescape(key)]: processed[key]
-        }))
-        .reduce((acc, cur) => ({ ...acc, ...cur }), {});
-
-      return resolver.resolve($type, finalObj);
-    }
-
-    return resolver.resolve($type, rest);
-  }
-
-  return Object.keys(rest)
-    .map(key => ({
-      [unescape(key)]: parseSwitch(resolver, rest[key])
-    }))
-    .reduce(Object.assign, {});
-};
 
 function findResolver(name: string): IResolverConstructor {
   switch (name) {
@@ -79,30 +19,96 @@ function findResolver(name: string): IResolverConstructor {
   }
 }
 
+const assign = (final: object, current: object) => ({ ...final, current });
+
+const extend = (final: any[], current: any) => [...final, current];
+
 export default class Parser implements IParser {
   constructor(resolvers: { [name: string]: null | IResolverConstructor }) {
     this.resolverConstructors = Object.keys(resolvers)
       .map(key => ({ key: resolvers[key] || findResolver(key) }))
-      .reduce(Object.assign, {});
+      .reduce(assign, {});
   }
 
   resolverConstructors: { [name: string]: IResolverConstructor };
+  resolver: IResolver;
 
-  parse(obj: IDefinitionObject): any {
+  initialize = ($init: object) => {
+    const resolvers = Object.keys($init)
+      .map(key => ({ key, Resolver: this.resolverConstructors[key] }))
+      .filter(({ Resolver }) => Resolver !== null)
+      .map(({ key, Resolver }) => new Resolver($init[key]))
+      .reduce(extend, []);
+
+    this.resolver = new Resolver(resolvers as IResolver[]);
+  };
+
+  parse = (obj: IDefinitionObject): any => {
     if (!obj) {
       return null;
     }
 
     const { $init, ...rest } = obj;
+    this.initialize($init);
 
-    const resolvers = Object.keys($init)
-      .map(key => ({ key, Resolver: this.resolverConstructors[key] }))
-      .filter(({ Resolver }) => !!Resolver)
-      .map(({ key, Resolver }) => new Resolver($init[key]))
-      .reduce((arr: IResolver[], resolver) => [...arr, resolver], []);
+    return this.parseObject(rest);
+  };
 
-    return parseObject(new Resolver(resolvers), rest);
-  }
+  parseSwitch = (obj: string | object | any[]): any => {
+    if (typeof obj === "string") {
+      return this.resolver.resolve(obj);
+    }
+    if (Array.isArray(obj)) {
+      return this.parseArray(obj);
+    }
+    if (typeof obj === "object") {
+      return this.parseObject(obj);
+    }
+    return obj;
+  };
+
+  parseArray = (array: any[]) => {
+    return array.map(this.parseSwitch, this);
+  };
+
+  parseObject = (obj: {
+    [key: string]: any;
+    $type?: string;
+    $process?: string[];
+  }): any => {
+    const { $type, $process, ...rest } = obj;
+
+    if ($type) {
+      if ($process && $process instanceof Array) {
+        const processed = {
+          ...rest,
+          ...$process
+            .map(elem => ({
+              [elem]: this.parseSwitch(rest[elem])
+            }))
+            .reduce(assign, {})
+        };
+
+        const finalObj = Object.keys(processed)
+          .map(key => ({
+            [unescape(key)]: processed[key]
+          }))
+          .reduce(assign, {});
+
+        return this.resolver.resolve($type, finalObj);
+      }
+
+      return this.resolver.resolve($type, rest);
+    }
+
+    return Object.keys(rest)
+      .map(key => ({
+        [unescape(key)]: this.parseSwitch(rest[key])
+      }))
+      .reduce(assign, {});
+  };
 
   static readonly chanceParser = new Parser({ chance: null });
 }
+
+export { unescape, findResolver };
