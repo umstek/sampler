@@ -1,0 +1,7 @@
+.rts2*
+.gitignore
+example
+.vscode
+coverage
+node_modules
+dist/*.test.*

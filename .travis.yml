@@ -1,9 +1,19 @@
 language: node_js
 node_js:
-  - 8
+  - node
 cache:
   directories:
     - node_modules
 script:
-  - npm run lint
+  - npm run build
   - npm run test:ci
+deploy:
+  skip_cleanup: true
+  provider: npm
+  email: umstek@live.com
+  api_key:
+    secure: gLz5okkhKuxWC/3E1go5sbSkw3HCkco5oUJ9kIHEv28B38T8ZrVk9rxFSUpNgBIT6ETOPeueskvptoG2PQPYoJO7oOmug2RvwGlezzIHmAa/t6s693aJJOZokjAe708p8aRq20Q4Q0PXx4Za2f5r/mxrQcIDlNGXMQurklwQnjYwBCKXGE2jxkfiIPwdSvpHuuVrtfq4pTI+nLp1hWqlz8v5Si0KJhfsPIzyBk1hDL4pwLnY72wxE/3XYWhFwJ4MDb06ierMG7e6g/CS8I/luYa6SII9LqhaeqiLNhjPFnIhXRjWZ+0H15UbOcZPKAazy/J/scw6JUbnqfGKetgMDxEDUFDHkMCmO8Y4UijEdkM834i9+JvfQ3hJ3MlR5/nCsXCWLiSBbOh6EPtQ2dNO2zPoG8mBezAQW1bDtexTNiLdopZRJssvB8JQcNBmy86dZw7k+ZcoNL4WbY2u73MWyjVfKXYf4m2+DM3jfCETl+nBOkwAv3iuaplpJp1YdRVudDtpSXrvVTtf3M1GZW6h1TAxmtR1tgTq25LvH+hak6s4XytwhaPWz5RLVKvFvn7VShQ+j2xJ+hH2xuDb0kft7uHOlkD7lorYER/ntTqTnFM69JQJHKw8aBYfyb6At8BETZIeOJDCJWzAl/dj5BH+8R9TKTrFXSOlqtLh97iGjIE=
+  on:
+    tags: true
+    repo: umstek/sampler
+    branch: master
