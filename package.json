@@ -1,5 +1,5 @@
 {
-  "name": "sampler",
+  "name": "samplerjs",
   "version": "0.2.0",
   "description": "",
   "main": "dist/sampler.js",
