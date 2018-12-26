@@ -5,7 +5,7 @@ export default class ChanceResolver implements IResolver {
 
   constructor(args?: { seed: number }) {
     this.seed = args && args.seed;
-    this.supportedTypes = ["seed", "name", "number"];
+    this.supportedTypes = ["seed", "name", "number", "add"];
   }
 
   seed: number;
@@ -18,6 +18,8 @@ export default class ChanceResolver implements IResolver {
         return "John Doe";
       case "number":
         return 9;
+      case "add":
+        return args.a + args.b;
       default:
         return null;
     }

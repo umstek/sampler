@@ -86,6 +86,7 @@ export default class Parser implements IParser {
         const processed = {
           ...rest,
           ...$process
+            .filter(key => rest[key])
             .map(elem => ({
               [elem]: this.parseSwitch(rest[elem])
             }))

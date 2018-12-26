@@ -193,5 +193,33 @@ describe.only("Parser functions", () => {
       });
       expect(parser.parseObject).toReturnWith("John Doe");
     });
+
+    test("it also sends other items as args in the object with $type defined", () => {
+      parser.parseObject({ $type: "add", a: 5, b: 7 });
+
+      expect(parser.parseSwitch).not.toBeCalled();
+      expect(parser.resolver.resolve).toBeCalledWith("add", {
+        a: 5,
+        b: 7
+      });
+      expect(parser.parseObject).toReturnWith(12);
+    });
+
+    test("it preprocesses args in $process array if present", () => {
+      parser.parseObject({
+        $type: "add",
+        a: 5,
+        b: "number",
+        $process: ["b", "c"]
+      });
+
+      expect(parser.parseSwitch).toBeCalledWith("number");
+      expect(parser.parseSwitch).toReturnWith(9);
+      expect(parser.resolver.resolve).toBeCalledWith("add", {
+        a: 5,
+        b: 9
+      });
+      expect(parser.parseObject).toReturnWith(14);
+    });
   });
 });
