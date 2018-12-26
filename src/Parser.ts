@@ -19,7 +19,7 @@ function findResolver(name: string): IResolverConstructor {
   }
 }
 
-const assign = (final: object, current: object) => ({ ...final, current });
+const assign = (final: object, current: object) => ({ ...final, ...current });
 
 const extend = (final: any[], current: any) => [...final, current];
 
@@ -36,7 +36,7 @@ export default class Parser implements IParser {
   initialize = ($init: object) => {
     const resolvers = Object.keys($init)
       .map(key => ({ key, Resolver: this.resolverConstructors[key] }))
-      .filter(({ Resolver }) => Resolver !== null)
+      .filter(({ Resolver }) => Boolean(Resolver))
       .map(({ key, Resolver }) => new Resolver($init[key]))
       .reduce(extend, []);
 
@@ -49,7 +49,7 @@ export default class Parser implements IParser {
     }
 
     const { $init, ...rest } = obj;
-    this.initialize($init);
+    this.initialize($init || {});
 
     return this.parseObject(rest);
   };

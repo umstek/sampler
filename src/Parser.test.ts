@@ -1,5 +1,4 @@
 import Parser, * as parserUtil from "./Parser";
-import Resolver from "./Resolver";
 jest.mock("./Resolver/ChanceResolver");
 import ChanceResolver from "./Resolver/ChanceResolver";
 
@@ -26,19 +25,39 @@ describe("Parser functions", () => {
   });
 
   describe("Initialize", () => {
-    // if we don't provide the resolver here, it will use the unmocked one.
-    const parser = new Parser({ chance: ChanceResolver });
-
-    test("it initializes the root resolver", () => {
+    test("it initializes the root resolver with empty $init", () => {
+      const parser = new Parser({ chance: ChanceResolver });
       parser.initialize({});
+
+      expect(parser.resolver).toBeDefined();
+    });
+
+    test("it initializes the root resolver when unknown resolver names present in $init", () => {
+      const parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({ whatever: { seed: 10 } });
+
+      expect(parser.resolver).toBeDefined();
+    });
+
+    test("it initializes the root resolver when correct resolver names present in $init", () => {
+      const parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({ chance: { seed: 10 } });
 
       expect(parser.resolver).toBeDefined();
     });
   });
 
   describe("ParseSwitch", () => {
-    const parser = new Parser({ chance: ChanceResolver });
-    parser.initialize({});
+    let parser: Parser;
+
+    beforeAll(() => {
+      parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({});
+    });
+
+    afterAll(() => {
+      parser = undefined;
+    });
 
     beforeEach(() => {
       jest.spyOn(parser, "parseSwitch");
@@ -87,6 +106,78 @@ describe("Parser functions", () => {
       expect(parser.parseArray).not.toBeCalled();
       expect(parser.parseObject).not.toBeCalled();
       expect(parser.parseSwitch).toReturnWith(func);
+    });
+  });
+
+  describe("ParseArray", () => {
+    let parser: Parser;
+
+    beforeAll(() => {
+      parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({});
+    });
+
+    afterAll(() => {
+      parser = undefined;
+    });
+
+    beforeEach(() => {
+      jest.spyOn(parser, "parseSwitch");
+
+      jest.spyOn(parser.resolver, "resolve");
+      jest.spyOn(parser, "parseArray");
+      jest.spyOn(parser, "parseObject");
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("it calls parseSwitch for each array item", () => {
+      parser.parseArray([{}, 1, "string"]);
+
+      expect(parser.parseSwitch).toBeCalledTimes(3);
+    });
+  });
+
+  describe("ParseObject", () => {
+    let parser: Parser;
+
+    beforeAll(() => {
+      parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({ seed: 99 });
+    });
+
+    afterAll(() => {
+      parser = undefined;
+    });
+
+    beforeEach(() => {
+      jest.spyOn(parser, "parseSwitch");
+
+      jest.spyOn(parser.resolver, "resolve");
+      jest.spyOn(parser, "parseArray");
+      jest.spyOn(parser, "parseObject");
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("it doesn't call parseSwitch for an empty object", () => {
+      parser.parseObject({});
+
+      expect(parser.parseSwitch).not.toBeCalled();
+      expect(parser.parseObject).toReturnWith({});
+    });
+
+    test("it calls parseSwitch for an object with keys", () => {
+      parser.parseObject({ a: "seed", b: "name" });
+
+      expect(parser.parseSwitch).toBeCalledTimes(2);
+      expect(parser.resolver.resolve).toBeCalledWith("seed");
+      expect(parser.resolver.resolve).toBeCalledWith("name");
+      expect(parser.parseObject).toReturn();
     });
   });
 });
