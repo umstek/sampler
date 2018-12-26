@@ -4,3 +4,4 @@ example
 .vscode
 coverage
 node_modules
+dist/*.test.*
