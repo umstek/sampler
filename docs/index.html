@@ -5,8 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>SamplerJS Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-    <script src="https://embed.runkit.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://embed.runkit.com"
+      data-element-id="sampler-ex-1"
+    ></script>
   </head>
-  <body></body>
+  <body>
+    <div id="sampler-ex-1">
+        const samplerjs = require("samplerjs");
+        const parser = samplerjs.Parser.chanceParser;
+        const result = parser.parse({
+            user: {
+                firstName: "first",
+                lastName: "last",
+                tel: "phone",
+                gender: "gender"
+            },
+            description: "paragraph"
+            });
+    </div>
+  </body>
 </html>
