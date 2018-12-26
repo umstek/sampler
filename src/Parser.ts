@@ -47,7 +47,7 @@ export default class Parser implements IParser {
   };
 
   parse = (obj: IDefinitionObject): any => {
-    if (!obj) {
+    if (!obj || typeof obj !== "object") {
       return null;
     }
 

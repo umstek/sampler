@@ -1,6 +1,7 @@
 import Parser, * as parserUtil from "./Parser";
 jest.mock("./Resolver/ChanceResolver");
 import ChanceResolver from "./Resolver/ChanceResolver";
+import EmptyResolver from "./Resolver/EmptyResolver";
 
 describe.only("Parser functions", () => {
   describe("Unescape", () => {
@@ -21,6 +22,10 @@ describe.only("Parser functions", () => {
   describe("FindResolver", () => {
     test("it returns chance resolver constructor when asked", () => {
       expect(parserUtil.findResolver("chance")).toBe(ChanceResolver);
+    });
+
+    test("it returns empty resolver when asked one is not present", () => {
+      expect(parserUtil.findResolver("unknown")).toBe(EmptyResolver);
     });
   });
 
@@ -220,6 +225,49 @@ describe.only("Parser functions", () => {
         b: 9
       });
       expect(parser.parseObject).toReturnWith(14);
+    });
+  });
+
+  describe("Parse", () => {
+    let parser: Parser;
+
+    beforeAll(() => {
+      parser = new Parser({ chance: ChanceResolver });
+      parser.initialize({ seed: 20 });
+    });
+
+    afterAll(() => {
+      parser = undefined;
+    });
+
+    beforeEach(() => {
+      jest.spyOn(parser, "parse");
+      jest.spyOn(parser, "initialize");
+      jest.spyOn(parser, "parseObject");
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("it returns null if called with no object", () => {
+      parser.parse(undefined);
+      expect(parser.parse).toReturnWith(null);
+    });
+
+    test("it returns empty object if called with empty object", () => {
+      parser.parse({});
+      expect(parser.parse).toReturnWith({});
+    });
+
+    test("it calls initialize function if called with any object", () => {
+      parser.parse({});
+      expect(parser.initialize).toBeCalled();
+    });
+
+    test("it calls parseObject function if called with any object", () => {
+      parser.parse({});
+      expect(parser.parseObject).toBeCalled();
     });
   });
 });
