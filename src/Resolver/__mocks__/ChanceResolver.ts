@@ -4,7 +4,7 @@ export default class ChanceResolver implements IResolver {
   supportedTypes: string[];
 
   constructor(args?: { seed: number }) {
-    this.seed = args.seed;
+    this.seed = args && args.seed;
     this.supportedTypes = ["seed", "name", "number"];
   }
 

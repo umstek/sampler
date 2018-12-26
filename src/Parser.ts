@@ -34,10 +34,13 @@ export default class Parser implements IParser {
   resolver: IResolver;
 
   initialize = ($init: object) => {
-    const resolvers = Object.keys($init)
-      .map(key => ({ key, Resolver: this.resolverConstructors[key] }))
-      .filter(({ Resolver }) => Boolean(Resolver))
-      .map(({ key, Resolver }) => new Resolver($init[key]))
+    const resolvers = Object.keys(this.resolverConstructors)
+      .map(key => ({
+        key,
+        Resolver: this.resolverConstructors[key],
+        args: $init[key]
+      }))
+      .map(r => new r.Resolver(r.args))
       .reduce(extend, []);
 
     this.resolver = new Resolver(resolvers as IResolver[]);
@@ -79,7 +82,7 @@ export default class Parser implements IParser {
     const { $type, $process, ...rest } = obj;
 
     if ($type) {
-      if ($process && $process instanceof Array) {
+      if ($process && Array.isArray($process)) {
         const processed = {
           ...rest,
           ...$process

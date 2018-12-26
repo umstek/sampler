@@ -2,7 +2,7 @@ import Parser, * as parserUtil from "./Parser";
 jest.mock("./Resolver/ChanceResolver");
 import ChanceResolver from "./Resolver/ChanceResolver";
 
-describe("Parser functions", () => {
+describe.only("Parser functions", () => {
   describe("Unescape", () => {
     test("it doesn't change strings w/o $ prefix", () => {
       expect(parserUtil.unescape("asdf")).toBe("asdf");
@@ -30,6 +30,7 @@ describe("Parser functions", () => {
       parser.initialize({});
 
       expect(parser.resolver).toBeDefined();
+      expect(parser.resolver.supportedTypes.length).toBeGreaterThan(0);
     });
 
     test("it initializes the root resolver when unknown resolver names present in $init", () => {
@@ -37,13 +38,15 @@ describe("Parser functions", () => {
       parser.initialize({ whatever: { seed: 10 } });
 
       expect(parser.resolver).toBeDefined();
+      expect(parser.resolver.supportedTypes.length).toBeGreaterThan(0);
     });
 
     test("it initializes the root resolver when correct resolver names present in $init", () => {
       const parser = new Parser({ chance: ChanceResolver });
-      parser.initialize({ chance: { seed: 10 } });
+      parser.initialize({ chance: { seed: 11 } });
 
       expect(parser.resolver).toBeDefined();
+      expect(parser.resolver.supportedTypes.length).toBeGreaterThan(0);
     });
   });
 
@@ -145,7 +148,7 @@ describe("Parser functions", () => {
 
     beforeAll(() => {
       parser = new Parser({ chance: ChanceResolver });
-      parser.initialize({ seed: 99 });
+      parser.initialize({ seed: 20 });
     });
 
     afterAll(() => {
@@ -178,6 +181,17 @@ describe("Parser functions", () => {
       expect(parser.resolver.resolve).toBeCalledWith("seed");
       expect(parser.resolver.resolve).toBeCalledWith("name");
       expect(parser.parseObject).toReturn();
+    });
+
+    test("it calls resolve directly if the object has $type set", () => {
+      parser.parseObject({ $type: "name", a: "a", b: "number" });
+
+      expect(parser.parseSwitch).not.toBeCalled();
+      expect(parser.resolver.resolve).toBeCalledWith("name", {
+        a: "a",
+        b: "number"
+      });
+      expect(parser.parseObject).toReturnWith("John Doe");
     });
   });
 });
