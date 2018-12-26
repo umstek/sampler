@@ -16,8 +16,8 @@
     "type": "git",
     "url": "git+https://github.com/umstek/sampler.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Wickramaranga Abeygunawardhana <umstek@live.com> (http://www.umstek.tk)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/umstek/sampler/issues"
   },
