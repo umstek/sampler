@@ -1,6 +1,6 @@
 {
   "name": "samplerjs",
-  "version": "0.2.2-0",
+  "version": "0.2.2",
   "description": "",
   "main": "dist/sampler.js",
   "umd:main": "dist/sampler.umd.js",
