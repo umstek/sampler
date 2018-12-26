@@ -3,34 +3,36 @@ jest.mock("./Resolver/ChanceResolver");
 import ChanceResolver from "./Resolver/ChanceResolver";
 import EmptyResolver from "./Resolver/EmptyResolver";
 
-describe.only("Parser functions", () => {
-  describe("Unescape", () => {
-    test("it doesn't change strings w/o $ prefix", () => {
+describe("Parser utility functions", () => {
+  describe("when unscaping strings", () => {
+    it("should not change strings w/o $ prefix", () => {
       expect(parserUtil.unescape("asdf")).toBe("asdf");
     });
 
-    test("it doesn't change strings w/ only one $ prefix", () => {
+    it("should not change strings w/ only one $ prefix", () => {
       expect(parserUtil.unescape("$asdf")).toBe("$asdf");
     });
 
-    test("it unescapes $ signs in case of more than one", () => {
+    it("should unescape $ signs if more than one exists", () => {
       expect(parserUtil.unescape("$$asdf")).toBe("$asdf");
       expect(parserUtil.unescape("$$$asdf")).toBe("$$asdf");
     });
   });
 
-  describe("FindResolver", () => {
-    test("it returns chance resolver constructor when asked", () => {
+  describe("when asked for resolver by name", () => {
+    it("should return the specific resolver for any known string", () => {
       expect(parserUtil.findResolver("chance")).toBe(ChanceResolver);
     });
 
-    test("it returns empty resolver when asked one is not present", () => {
+    it("should return empty resolver for any unknown string", () => {
       expect(parserUtil.findResolver("unknown")).toBe(EmptyResolver);
     });
   });
+});
 
-  describe("Initialize", () => {
-    test("it initializes the root resolver with empty $init", () => {
+describe("Parser object functions", () => {
+  describe("when initialized", () => {
+    it("should define the default root resolver for empty $init", () => {
       const parser = new Parser({ chance: ChanceResolver });
       parser.initialize({});
 
@@ -38,7 +40,7 @@ describe.only("Parser functions", () => {
       expect(parser.resolver.supportedTypes.length).toBeGreaterThan(0);
     });
 
-    test("it initializes the root resolver when unknown resolver names present in $init", () => {
+    it("should define the root resolver even if unknown resolver names present in $init", () => {
       const parser = new Parser({ chance: ChanceResolver });
       parser.initialize({ whatever: { seed: 10 } });
 
@@ -46,7 +48,7 @@ describe.only("Parser functions", () => {
       expect(parser.resolver.supportedTypes.length).toBeGreaterThan(0);
     });
 
-    test("it initializes the root resolver when correct resolver names present in $init", () => {
+    it("should define the root resolver when correct resolver names present in $init", () => {
       const parser = new Parser({ chance: ChanceResolver });
       parser.initialize({ chance: { seed: 11 } });
 
@@ -55,7 +57,7 @@ describe.only("Parser functions", () => {
     });
   });
 
-  describe("ParseSwitch", () => {
+  describe("when any type of object is given", () => {
     let parser: Parser;
 
     beforeAll(() => {
@@ -79,7 +81,7 @@ describe.only("Parser functions", () => {
       jest.restoreAllMocks();
     });
 
-    test("it calls resolve of resolver if argument is a string", () => {
+    it("should call resolve of resolver if the argument is a string", () => {
       parser.parseSwitch("name");
 
       expect(parser.parseSwitch).toBeCalled();
@@ -88,7 +90,7 @@ describe.only("Parser functions", () => {
       expect(parser.resolver.resolve).toBeCalledWith("name");
     });
 
-    test("it calls parseArray if argument is an array", () => {
+    it("should call parseArray if argument is an array", () => {
       parser.parseSwitch([]);
 
       expect(parser.parseSwitch).toBeCalled();
@@ -97,7 +99,7 @@ describe.only("Parser functions", () => {
       expect(parser.parseArray).toBeCalledWith([]);
     });
 
-    test("it calls parseObject if argument is an object", () => {
+    it("should call parseObject if argument is an object", () => {
       parser.parseSwitch({});
 
       expect(parser.parseSwitch).toBeCalled();
@@ -106,7 +108,7 @@ describe.only("Parser functions", () => {
       expect(parser.parseObject).toBeCalledWith({});
     });
 
-    test("it returns the object itself, otherwise", () => {
+    it("should return the object itself, otherwise", () => {
       const func = () => null; // Whatever func at my disposal
       parser.parseSwitch(func);
 
@@ -117,7 +119,7 @@ describe.only("Parser functions", () => {
     });
   });
 
-  describe("ParseArray", () => {
+  describe("when an array is needed to be parsed", () => {
     let parser: Parser;
 
     beforeAll(() => {
@@ -141,14 +143,14 @@ describe.only("Parser functions", () => {
       jest.restoreAllMocks();
     });
 
-    test("it calls parseSwitch for each array item", () => {
+    it("should call parseSwitch for each array item", () => {
       parser.parseArray([{}, 1, "string"]);
 
       expect(parser.parseSwitch).toBeCalledTimes(3);
     });
   });
 
-  describe("ParseObject", () => {
+  describe("when an object is needed to be parsed", () => {
     let parser: Parser;
 
     beforeAll(() => {
@@ -172,14 +174,14 @@ describe.only("Parser functions", () => {
       jest.restoreAllMocks();
     });
 
-    test("it doesn't call parseSwitch for an empty object", () => {
+    it("should not call parseSwitch for an empty object", () => {
       parser.parseObject({});
 
       expect(parser.parseSwitch).not.toBeCalled();
       expect(parser.parseObject).toReturnWith({});
     });
 
-    test("it calls parseSwitch for an object with keys", () => {
+    it("should call parseSwitch for an object with keys", () => {
       parser.parseObject({ a: "seed", b: "name" });
 
       expect(parser.parseSwitch).toBeCalledTimes(2);
@@ -188,7 +190,7 @@ describe.only("Parser functions", () => {
       expect(parser.parseObject).toReturn();
     });
 
-    test("it calls resolve directly if the object has $type set", () => {
+    it("should call resolve directly if the object has $type set", () => {
       parser.parseObject({ $type: "name", a: "a", b: "number" });
 
       expect(parser.parseSwitch).not.toBeCalled();
@@ -199,7 +201,7 @@ describe.only("Parser functions", () => {
       expect(parser.parseObject).toReturnWith("John Doe");
     });
 
-    test("it also sends other items as args in the object with $type defined", () => {
+    it("should also send other items as args in the object with $type defined", () => {
       parser.parseObject({ $type: "add", a: 5, b: 7 });
 
       expect(parser.parseSwitch).not.toBeCalled();
@@ -210,7 +212,7 @@ describe.only("Parser functions", () => {
       expect(parser.parseObject).toReturnWith(12);
     });
 
-    test("it preprocesses args in $process array if present", () => {
+    it("should pre-process args in $process array if present", () => {
       parser.parseObject({
         $type: "add",
         a: 5,
@@ -228,7 +230,7 @@ describe.only("Parser functions", () => {
     });
   });
 
-  describe("Parse", () => {
+  describe("when a document is given for parsing", () => {
     let parser: Parser;
 
     beforeAll(() => {
@@ -250,22 +252,22 @@ describe.only("Parser functions", () => {
       jest.restoreAllMocks();
     });
 
-    test("it returns null if called with no object", () => {
+    it("should return null if called with no object", () => {
       parser.parse(undefined);
       expect(parser.parse).toReturnWith(null);
     });
 
-    test("it returns empty object if called with empty object", () => {
+    it("should return empty object if called with empty object", () => {
       parser.parse({});
       expect(parser.parse).toReturnWith({});
     });
 
-    test("it calls initialize function if called with any object", () => {
+    it("should call initialize function if called with any object", () => {
       parser.parse({});
       expect(parser.initialize).toBeCalled();
     });
 
-    test("it calls parseObject function if called with any object", () => {
+    it("should call parseObject function if called with any object", () => {
       parser.parse({});
       expect(parser.parseObject).toBeCalled();
     });
