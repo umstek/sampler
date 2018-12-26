@@ -1,4 +1,5 @@
-import Parser, * as parserUtil from "./Parser";
+import * as parserUtil from "./Parser";
+const Parser = parserUtil.Parser;
 jest.mock("./Resolver/ChanceResolver");
 import ChanceResolver from "./Resolver/ChanceResolver";
 import EmptyResolver from "./Resolver/EmptyResolver";
@@ -58,7 +59,7 @@ describe("Parser object functions", () => {
   });
 
   describe("when any type of object is given", () => {
-    let parser: Parser;
+    let parser: parserUtil.Parser;
 
     beforeAll(() => {
       parser = new Parser({ chance: ChanceResolver });
@@ -120,7 +121,7 @@ describe("Parser object functions", () => {
   });
 
   describe("when an array is needed to be parsed", () => {
-    let parser: Parser;
+    let parser: parserUtil.Parser;
 
     beforeAll(() => {
       parser = new Parser({ chance: ChanceResolver });
@@ -151,7 +152,7 @@ describe("Parser object functions", () => {
   });
 
   describe("when an object is needed to be parsed", () => {
-    let parser: Parser;
+    let parser: parserUtil.Parser;
 
     beforeAll(() => {
       parser = new Parser({ chance: ChanceResolver });
@@ -231,7 +232,7 @@ describe("Parser object functions", () => {
   });
 
   describe("when a document is given for parsing", () => {
-    let parser: Parser;
+    let parser: parserUtil.Parser;
 
     beforeAll(() => {
       parser = new Parser({ chance: ChanceResolver });

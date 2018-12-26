@@ -23,7 +23,7 @@ const assign = (final: object, current: object) => ({ ...final, ...current });
 
 const extend = (final: any[], current: any) => [...final, current];
 
-export default class Parser implements IParser {
+export class Parser implements IParser {
   constructor(resolvers: { [name: string]: null | IResolverConstructor }) {
     this.resolverConstructors = Object.keys(resolvers)
       .map(key => ({ key: resolvers[key] || findResolver(key) }))
