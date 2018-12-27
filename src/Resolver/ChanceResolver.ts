@@ -8,11 +8,14 @@ const easy = [
   "integer",
   "letter",
   "natural",
+  "prime",
   "string",
+
   "paragraph",
   "sentence",
   "syllable",
   "word",
+
   "age",
   "birthday",
   "cf",
@@ -24,11 +27,15 @@ const easy = [
   "prefix",
   "ssn",
   "suffix",
+
+  "animal",
+
   "android_id",
   "apple_token",
   "bb_pin",
   "wp7_anid",
   "wp8_anid2",
+
   "avatar",
   "color",
   "company",
@@ -44,6 +51,7 @@ const easy = [
   "tld",
   "twitter",
   "url",
+
   "address",
   "altitude",
   "areacode",
@@ -56,10 +64,12 @@ const easy = [
   "longitude",
   "phone",
   "postal",
+  "postcode",
   "province",
   "state",
   "street",
   "zip",
+
   "ampm",
   "date",
   "hammertime",
@@ -72,6 +82,7 @@ const easy = [
   "timezone",
   "weekday",
   "year",
+
   "cc",
   "cc_type",
   "currency",
@@ -81,6 +92,7 @@ const easy = [
   "exp",
   "exp_month",
   "exp_year",
+
   "coin",
   "guid",
   "hash",
