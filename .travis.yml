@@ -7,6 +7,9 @@ cache:
 script:
   - npm run build
   - npm run test:ci
+  - npm install codecov -g
+after_success:
+  - codecov -f coverage/*.json
 deploy:
   skip_cleanup: true
   provider: npm
