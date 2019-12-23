@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 12
       - run: npm build
-      - run: npm test:ci
+      - run: npm run test:ci
 
   publish-npm:
     needs: build
@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - run: npm build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
@@ -38,6 +39,7 @@ jobs:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
           scope: "@umstek"
+      - run: npm build
       - run: npm run prepare:gpr
       - run: npm publish
         env:
