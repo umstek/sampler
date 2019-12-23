@@ -5,3 +5,4 @@ example
 coverage
 node_modules
 dist/*.test.*
+scripts

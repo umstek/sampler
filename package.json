@@ -23,6 +23,7 @@
   "source": "src/parser.ts",
   "scripts": {
     "build": "microbundle",
+    "prepare:gpr": "node scripts/prepare-gpr.js",
     "dev": "microbundle watch",
     "test": "jest --watch",
     "test:ci": "jest --coverage"
