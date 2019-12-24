@@ -1,7 +1,8 @@
 # SamplerJS
 
 Generate elaborate random data instantly.  
-[![Build Status](https://travis-ci.org/umstek/sampler.svg?branch=master)](https://travis-ci.org/umstek/sampler)
+![](https://github.com/umstek/sampler/workflows/CI/badge.svg)
+![](https://github.com/umstek/sampler/workflows/Package%20Deploy/badge.svg)
 [![codecov](https://codecov.io/gh/umstek/sampler/branch/master/graph/badge.svg)](https://codecov.io/gh/umstek/sampler)
 
 ## How to use

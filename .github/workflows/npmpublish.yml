@@ -1,4 +1,4 @@
-name: Node.js Package
+name: Package Deploy
 
 on:
   release:
@@ -29,6 +29,8 @@ jobs:
         run: npm build
       - name: Test
         run: npm run test:ci
+      - name: Create artifact  # Want to save time on artifact upload
+        run: rm -rf node_modules coverage docs
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
