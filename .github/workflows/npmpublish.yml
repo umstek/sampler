@@ -8,24 +8,38 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm build
-      - run: npm run test:ci
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm build
+      - name: Test
+        run: npm run test:ci
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: release
 
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: release
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm build
-      - run: npm publish
+      - name: Publish to NPM
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -33,14 +47,18 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: release
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
           scope: "@umstek"
-      - run: npm build
-      - run: npm run prepare:gpr
-      - run: npm publish
+      - name: Prepare
+        run: npm run prepare:gpr
+      - name: Publish to GPR (NPM)
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.gpr_token}}
