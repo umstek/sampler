@@ -14,7 +14,7 @@ jobs:
       - run: npm build
       - run: npm run test:ci
       - name: codecov
-        uses: codecov/codecov-action@v1.0.5
+        uses: codecov/codecov-action@v1.5.2
         with:
           token: ${{secrets.codecov}}
           fail_ci_if_error: true
