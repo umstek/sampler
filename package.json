@@ -38,6 +38,6 @@
     "microbundle": "^0.12.0-next.6",
     "ts-jest": "^24.2.0",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "3.9.10"
   }
 }
